@@ -1,0 +1,40 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+class SIFTWrapper:
+
+    def __init__(self, im1, im2):
+
+        self.im1 = im1
+        self.im2 = im2
+
+    def compute_keypoints(self):
+
+        sift = cv2.xfeatures2d.SIFT_create(contrastThreshold=0.04, edgeThreshold=10, sigma=1.6)
+        kp1, des1 = sift.detectAndCompute(self.im1, None)
+        kp2, des2 = sift.detectAndCompute(self.im2, None)
+
+        return kp1, des1, kp2, des2
+
+    def compute_matches(self, des1, des2):
+
+        matcher = cv2.BFMatcher()
+        return matcher.knnMatch(des1, des2, k=2)
+
+    def compute_best_matches(self, r=0.4):
+
+        kp1, des1, kp2, des2 = self.compute_keypoints()
+        matches = self.compute_matches(des1, des2)
+
+        good_matches = []
+        for m, n in matches:
+
+            if m.distance < r * n.distance:
+                good_matches.append((m, n))
+
+            # Compute the ratio between best match m, and second best match n here
+            pass
+
+        return kp1, kp2, good_matches
