@@ -1,6 +1,4 @@
 import cv2
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 class SIFTWrapper:
@@ -23,7 +21,7 @@ class SIFTWrapper:
         matcher = cv2.BFMatcher()
         return matcher.knnMatch(des1, des2, k=2)
 
-    def compute_best_matches(self, r=0.4):
+    def compute_best_matches(self, r=0.7):
 
         kp1, des1, kp2, des2 = self.compute_keypoints()
         matches = self.compute_matches(des1, des2)
@@ -31,10 +29,8 @@ class SIFTWrapper:
         good_matches = []
         for m, n in matches:
 
+            # Compute the ratio between best match m, and second best match n here
             if m.distance < r * n.distance:
                 good_matches.append((m, n))
-
-            # Compute the ratio between best match m, and second best match n here
-            pass
 
         return kp1, kp2, good_matches

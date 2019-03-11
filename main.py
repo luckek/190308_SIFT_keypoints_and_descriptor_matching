@@ -1,5 +1,6 @@
 from SIFTWrapper import *
 import sys
+import matplotlib.pyplot as plt
 
 
 def main(argv):
@@ -12,7 +13,7 @@ def main(argv):
     I_2 = plt.imread(argv[1])
 
     sw = SIFTWrapper(I_1, I_2)
-    kp1, kp2, good_matches = sw.compute_best_matches()
+    kp1, kp2, good_matches = sw.compute_best_matches(0.6)
 
     img = cv2.drawMatchesKnn(I_1, kp1, I_2, kp2, good_matches, None, flags=2)
     plt.imshow(img)
